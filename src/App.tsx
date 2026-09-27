@@ -7,6 +7,7 @@ import type { CreatorRefinement, GenerationResult, MakeoverLevel, RoomPreference
 
 type Page = 'welcome' | 'preferences' | 'generating' | 'result' | 'refining' | 'helen'
 type Stage = 'generic' | 'helen'
+const ROOM_UPLOAD_ENABLED = false // Restore the upload entry point when real image generation is available.
 
 const roomTypes: RoomType[] = ['Living Room', 'Bedroom', 'Kitchen', 'Dining Room', 'Bathroom', 'Home Office', 'Other']
 const styles = [
@@ -111,21 +112,21 @@ function App() {
         <div className="welcome-copy">
           <div className="eyebrow"><span className="eyebrow-dot"/> YOUR SPACE, NEW POSSIBILITIES</div>
           <h1>See what your room <em>could become.</em></h1>
-          <p className="hero-copy">Upload a photo, choose the direction, and create a realistic makeover around your actual space.</p>
+          <p className="hero-copy">{ROOM_UPLOAD_ENABLED ? 'Upload a photo, choose the direction, and create a realistic makeover around your actual space.' : 'Choose a demo room, set the direction, and explore a realistic makeover before changing anything.'}</p>
           <div className="welcome-actions">
-            <button className="button button-primary" onClick={() => fileInput.current?.click()}><UploadCloud size={19}/> Upload Your Room <ArrowRight size={18}/></button>
-            <button className="button button-text" onClick={() => setShowDemo(true)}>Try a Demo Room <ArrowRight size={17}/></button>
+            {ROOM_UPLOAD_ENABLED && <button className="button button-primary" onClick={() => fileInput.current?.click()}><UploadCloud size={19}/> Upload Your Room <ArrowRight size={18}/></button>}
+            <button className={`button ${ROOM_UPLOAD_ENABLED ? 'button-text' : 'button-primary'}`} onClick={() => setShowDemo(true)}>Try a Demo Room <ArrowRight size={17}/></button>
           </div>
-          <p className="micro-copy">No account needed · Your photo stays in this browser</p>
+          <p className="micro-copy">{ROOM_UPLOAD_ENABLED ? 'No account needed · Your photo stays in this browser' : 'Four rooms to explore · No account needed'}</p>
           {error && <p className="error" role="alert">{error}</p>}
-          <div className="welcome-steps"><span><b>01</b> Upload a room</span><i/><span><b>02</b> Choose your direction</span><i/><span><b>03</b> See the possibility</span></div>
+          <div className="welcome-steps"><span><b>01</b> {ROOM_UPLOAD_ENABLED ? 'Upload a room' : 'Choose a room'}</span><i/><span><b>02</b> Choose your direction</span><i/><span><b>03</b> See the possibility</span></div>
         </div>
         <div className="hero-visual" aria-label="Illustrative living room makeover preview">
           <div className="hero-photo hero-photo-main"><img src="/demo/living-helen.jpg" alt="Cosy living room makeover demo"/><span className="hero-photo-tag">A warmer way to live</span></div>
           <div className="hero-photo hero-photo-before"><img src="/demo/living-before.jpg" alt="Living room before demo"/><span>BEFORE</span></div>
           <div className="visual-caption"><span className="tiny-star">✳</span><span>See it before you change it.</span></div>
         </div>
-        <input ref={fileInput} className="visually-hidden" type="file" accept="image/*" onChange={event => handleUpload(event.target.files?.[0])}/>
+        {ROOM_UPLOAD_ENABLED && <input ref={fileInput} className="visually-hidden" type="file" accept="image/*" onChange={event => handleUpload(event.target.files?.[0])}/>}
       </main>}
 
       {page === 'preferences' && <main className="inner-page preferences-page">

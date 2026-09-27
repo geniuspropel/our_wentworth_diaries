@@ -13,7 +13,7 @@ Build the production bundle with `npm run build`. Vercel serves the root `dist/`
 
 ## Prototype behavior
 
-- Uploading a photo keeps it locally in the browser and shows it as the original room in the result.
+- The upload entry point is hidden for the current demo. `ROOM_UPLOAD_ENABLED` in `src/App.tsx` can restore it later; uploads stay local in the browser and appear as the original room.
 - Four generated demo triptychs (living room, bedroom, kitchen, bathroom) supply the prepared before, generic makeover, and Helen-inspired refinement images. They are original synthetic demo assets, not Helen's Instagram photos.
 - Eight separate style-card previews show distinct directions in the same living room, making the styles easy to compare without changing room type.
 - Result images use a draggable, touch-friendly before/after divider with keyboard controls. Helen's result can compare the original against either makeover stage.
