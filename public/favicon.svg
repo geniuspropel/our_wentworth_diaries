@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Our Wentworth Diaries">
+  <rect width="64" height="64" rx="14" fill="#465540"/>
+  <path d="M10 20h7l5 24 8-18h4l8 18 5-24h7l-8 33h-8L32 36l-7 17h-8z" fill="#F6F2EA"/>
+  <circle cx="53" cy="52" r="4" fill="#B99A69"/>
+</svg>
