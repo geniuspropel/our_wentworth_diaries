@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, ChevronDown, Download, ImagePlus, Layers3, RotateCcw, Sparkles, UploadCloud } from 'lucide-react'
 import { scenarios, scenarioForRoom } from './data/scenarios'
 import { applyCreatorStyle, generateGenericMakeover } from './services/mockGeneration'
+import BeforeAfterComparison from './components/BeforeAfterComparison'
 import type { CreatorRefinement, GenerationResult, MakeoverLevel, RoomPreferences, RoomType, ScenarioKey } from './types'
 
 type Page = 'welcome' | 'preferences' | 'generating' | 'result' | 'refining' | 'helen'
-type Stage = 'before' | 'generic' | 'helen'
+type Stage = 'generic' | 'helen'
 
 const roomTypes: RoomType[] = ['Living Room', 'Bedroom', 'Kitchen', 'Dining Room', 'Bathroom', 'Home Office', 'Other']
 const styles = [
@@ -95,8 +96,8 @@ function App() {
 
   const selectedScenario = scenarios[scenarioForRoom(preferences.roomType)]
   const currentResult = page === 'helen' ? refined : generic
-  const currentImage = stage === 'before' ? original : stage === 'helen' ? refined?.image : generic?.image
-  const stageLabel = stage === 'before' ? 'Original room' : stage === 'helen' ? "Helen's Touch" : 'First makeover'
+  const currentImage = stage === 'helen' ? refined?.image ?? generic?.image ?? '' : generic?.image ?? ''
+  const stageLabel = stage === 'helen' ? "Helen's Touch" : 'First Makeover'
   const isResult = page === 'result' || page === 'helen'
 
   return (
@@ -151,10 +152,15 @@ function App() {
       {isResult && currentResult && <main className="inner-page result-page">
         <div className="page-top"><button className="back-link" onClick={() => { setPage(page === 'helen' ? 'result' : 'preferences'); setStage('generic'); window.scrollTo(0, 0) }}><ArrowLeft size={17}/> {page === 'helen' ? 'First makeover' : 'Preferences'}</button><span className="step-indicator">{page === 'helen' ? 'THE FINISHING TOUCH' : 'YOUR RESULT'}</span></div>
         <div className="result-heading"><div><div className="eyebrow"><span className="eyebrow-dot"/> {page === 'helen' ? 'A LITTLE MORE YOU' : 'THE REVEAL'}</div><h2>{page === 'helen' ? <>Now with <em>Helen’s Touch.</em></> : <>Your {preferences.style === 'Surprise Me' ? 'Room' : preferences.style} <em>Makeover.</em></>}</h2><p>{page === 'helen' ? 'We kept your makeover direction and added some of the colour, warmth, texture and finishing details seen across Helen’s interiors.' : 'A fresh way to see the potential in your space.'}</p></div><div className="result-meta"><span>{preferences.roomType}</span><span>{preferences.level}</span><span>{preferences.preserve.length} {preferences.preserve.length === 1 ? 'item' : 'items'} preserved</span></div></div>
-        <div className="result-layout"><div className="result-primary"><div className="stage-tabs" role="tablist" aria-label="Compare room stages">{([{ key:'before', label:'Original' }, { key:'generic', label:'First Makeover' }, ...(page === 'helen' ? [{ key:'helen', label:"Helen's Touch" }] : [])] as {key:Stage;label:string}[]).map(tab => <button key={tab.key} role="tab" aria-selected={stage === tab.key} className={stage === tab.key ? 'active' : ''} onClick={() => setStage(tab.key)}>{tab.label}</button>)}</div><div className="result-image"><img src={currentImage} alt={`${stageLabel} visual`} /><span className="image-pill">{stageLabel.toUpperCase()}</span></div><div className="image-caption"><span><Layers3 size={17}/> {uploaded ? 'Your original photo + illustrative sample makeover' : 'Illustrative demo transformation'}</span><span>{stage === 'before' ? '01' : stage === 'generic' ? '02' : '03'} / {page === 'helen' ? '03' : '02'}</span></div><div className="demo-notice">{uploaded ? 'This prototype displays your uploaded photo as the original. The makeover images are prepared examples for the selected room type; they were not generated from your photo.' : 'These prepared demo images show the makeover flow. Style, makeover level and keep/change choices are saved for the future image generator, but do not alter the static demo imagery.'}</div></div>
+        <div className="result-layout"><div className="result-primary">
+          <div className="comparison-toolbar"><span>SLIDE TO COMPARE</span>{page === 'helen' ? <div className="comparison-targets" aria-label="Choose a makeover to compare"><button type="button" aria-pressed={stage === 'generic'} className={stage === 'generic' ? 'active' : ''} onClick={() => setStage('generic')}>First Makeover</button><button type="button" aria-pressed={stage === 'helen'} className={stage === 'helen' ? 'active' : ''} onClick={() => setStage('helen')}>Helen’s Touch</button></div> : <span>ORIGINAL <span aria-hidden="true">↔</span> FIRST MAKEOVER</span>}</div>
+          <BeforeAfterComparison beforeImage={original} afterImage={currentImage} afterLabel={stageLabel}/>
+          <div className="image-caption"><span><Layers3 size={17}/> {uploaded ? 'Your photo + illustrative sample makeover' : 'Illustrative demo transformation'}</span><span>DRAG THE DIVIDER</span></div>
+          <div className="demo-notice">{uploaded ? 'This prototype compares your uploaded photo with a prepared sample for the selected room type. The sample was not generated from your photo.' : 'These prepared demo images show the makeover flow. Style, makeover level and keep/change choices are saved for the future image generator, but do not alter the static demo imagery.'}</div>
+        </div>
           <aside className="result-sidebar">{page === 'result' ? <><div className="sidebar-kicker">NEXT, MAKE IT YOURS</div><div className="helen-card"><span className="helen-symbol">✳</span><h3>A little more warmth?</h3><p>Refine this makeover with colours, textures and cosy finishing details seen across Helen’s home projects.</p><button className="button button-light" onClick={refine}>Add Helen’s Touch <ArrowRight size={18}/></button></div></> : <div className="touch-note"><span className="helen-symbol">✳</span><span>Inspired by the visual style documented across Helen’s home projects. These are app-generated ideas, not personal recommendations from Helen.</span></div>}
             <div className="plan-card"><div className="card-heading"><span className="sidebar-kicker">{page === 'helen' ? 'THE REFINEMENT' : 'YOUR PLAN'}</span><h3>{page === 'helen' ? 'What changed' : 'Makeover notes'}</h3></div>{page === 'helen' ? <ul className="change-list">{refined?.changes.map(item => <li key={item}><Check size={17}/>{item}</li>)}</ul> : <div className="plan-list">{generic?.plan.map(item => <div key={item.title}><h4>{item.title}</h4><p>{item.detail}</p></div>)}</div>}</div>
-            <div className="result-actions"><button className="secondary-action" onClick={() => { setPage('preferences'); window.scrollTo(0, 0) }}><RotateCcw size={17}/> Try Another Style</button><a className="secondary-action" href={stage === 'before' ? original : stage === 'helen' ? refined?.image : generic?.image} download={`our-wentworth-diaries-${stage}.jpg`}><Download size={17}/> Save Image</a><button className="secondary-action" onClick={startAgain}><ArrowLeft size={17}/> Start Again</button></div>
+            <div className="result-actions"><button className="secondary-action" onClick={() => { setPage('preferences'); window.scrollTo(0, 0) }}><RotateCcw size={17}/> Try Another Style</button><a className="secondary-action" href={currentImage} download={`our-wentworth-diaries-${stage}.jpg`}><Download size={17}/> Save Image</a><button className="secondary-action" onClick={startAgain}><ArrowLeft size={17}/> Start Again</button></div>
           </aside></div>
       </main>}
 

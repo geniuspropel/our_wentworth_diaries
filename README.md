@@ -16,6 +16,7 @@ Build the production bundle with `npm run build`. Vercel serves the root `dist/`
 - Uploading a photo keeps it locally in the browser and shows it as the original room in the result.
 - Four generated demo triptychs (living room, bedroom, kitchen, bathroom) supply the prepared before, generic makeover, and Helen-inspired refinement images. They are original synthetic demo assets, not Helen's Instagram photos.
 - Eight separate style-card previews show distinct directions in the same living room, making the styles easy to compare without changing room type.
+- Result images use a draggable, touch-friendly before/after divider with keyboard controls. Helen's result can compare the original against either makeover stage.
 - The result explicitly identifies prepared imagery, especially when a user uploads a photo. Style, level, and keep/change selections are collected for the future image service, but do not change the static demo imagery.
 - `src/services/mockGeneration.ts` contains the two replaceable async functions: `generateGenericMakeover(originalImage, preferences)` and `applyCreatorStyle(genericResult)`.
 - `src/data/helenStyleProfile.ts` is a separate reusable creator style configuration based on observed tendencies in the supplied research package. It does not imply Helen personally designed or approved any output.
