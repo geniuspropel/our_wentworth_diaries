@@ -9,14 +9,14 @@ type Stage = 'before' | 'generic' | 'helen'
 
 const roomTypes: RoomType[] = ['Living Room', 'Bedroom', 'Kitchen', 'Dining Room', 'Bathroom', 'Home Office', 'Other']
 const styles = [
-  { name: 'Warm Modern', image: '/demo/living-generic.jpg' },
-  { name: 'Contemporary', image: '/demo/kitchen-generic.jpg' },
-  { name: 'Scandinavian', image: '/demo/bedroom-generic.jpg' },
-  { name: 'Japandi', image: '/demo/bathroom-generic.jpg' },
-  { name: 'Cosy Traditional', image: '/demo/bedroom-helen.jpg' },
-  { name: 'Minimalist', image: '/demo/living-before.jpg' },
-  { name: 'Modern Country', image: '/demo/kitchen-helen.jpg' },
-  { name: 'Surprise Me', image: '/demo/living-helen.jpg' },
+  { name: 'Warm Modern', image: '/styles/warm-modern.jpg' },
+  { name: 'Contemporary', image: '/styles/contemporary.jpg' },
+  { name: 'Scandinavian', image: '/styles/scandinavian.jpg' },
+  { name: 'Japandi', image: '/styles/japandi.jpg' },
+  { name: 'Cosy Traditional', image: '/styles/cosy-traditional.jpg' },
+  { name: 'Minimalist', image: '/styles/minimalist.jpg' },
+  { name: 'Modern Country', image: '/styles/modern-country.jpg' },
+  { name: 'Surprise Me', image: '/styles/surprise-me.jpg' },
 ]
 const levels: { name: MakeoverLevel; description: string }[] = [
   { name: 'Refresh', description: 'Colour, textiles, lighting & styling' },
